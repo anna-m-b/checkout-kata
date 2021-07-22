@@ -10,53 +10,64 @@
 
 // The pricing structure should be separate from the checkout (and passed in)
 
-// ARRANGE / ACT / ASSERT 
+// ARRANGE / ACT / ASSERT
 
-const { scan, calculateTotal, clearBasket } = require("./index")
-
+const {
+  scan,
+  calculateTotal,
+  clearBasket,
+  applyAnyDiscounts,
+} = require("./index");
 
 afterEach(() => {
-    clearBasket();
+  clearBasket();
 });
 
-
 test("I want to scan a product to know its price", () => {
-    // ARRANGE
-    const expected = 32
+  // ARRANGE
+  const expected = 32;
 
-    // ACT
-    const checkoutScan = scan("banana")
+  // ACT
+  const checkoutScan = scan("banana");
 
-    // ASSERT
-    expect(checkoutScan).toBe(expected)
-
-})
-
+  // ASSERT
+  expect(checkoutScan).toBe(expected);
+});
 
 test("I want to scan a different product to know its price", () => {
-    // ARRANGE
-    const expected = 48
+  // ARRANGE
+  const expected = 48;
 
-    // ACT
-    const checkoutScan = scan("apple")
+  // ACT
+  const checkoutScan = scan("apple");
 
-    // ASSERT
-    expect(checkoutScan).toBe(expected)
+  // ASSERT
+  expect(checkoutScan).toBe(expected);
+});
 
-})
+test("If I scan 2 items, the checkout tells me the total price", () => {
+  //ARRANGE
+  const expected = 80;
+  scan("apple");
+  scan("banana");
 
-test("If I buy 2 items, the checkout tells me the total price", () => {
-    //ARRANGE
-    const expected = 80
-    scan("apple");
-    scan("banana")
+  // ACT
+  const checkoutTotal = calculateTotal();
 
-    // ACT
-    const checkoutTotal = calculateTotal()
+  // ASSERT
+  expect(checkoutTotal).toBe(expected);
+});
 
-    // ASSERT
-    expect(checkoutTotal).toBe(expected)
+test("If I scan enough of the same items that are on a multi-buy, the discount is applied", () => {
+  // ARRANGE
+  const expected = 130;
+  scan("kiwi");
+  scan("kiwi");
+  scan("kiwi");
+    
+  // ACT
+  const checkoutDiscountedTotal = applyAnyDiscounts();
 
-})
-
-
+  // ASSERT
+  expect(checkoutDiscountedTotal).toBe(expected);
+});
