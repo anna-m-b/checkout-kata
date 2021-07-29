@@ -52,6 +52,10 @@ class checkout {
     this.total = 0;
   }
   scan(item) {
+    if (!this.findPricingRule(item)) {
+      console.log(`${item} not found in pricing rules - please contact a staff member`)
+      return;
+    }
     this.basket[item] = ++this.basket[item] || 1;
   }
   calculateMultibuyDiscount(item, quantity) {
